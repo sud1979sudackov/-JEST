@@ -1,0 +1,59 @@
+Базовая настройка
+ в package.json:
+
+json
+{
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watchAll",
+    "test:coverage": "jest --coverage"
+  },
+  "jest": {
+    "testEnvironment": "node",
+    "collectCoverage": true,
+    "coverageDirectory": "coverage",
+    "coverageReporters": ["text", "lcov"]
+  }
+}
+ Пример структуры проекта
+text
+project/
+├── src/
+│   ├── math.js
+│   └── utils.js
+├── __tests__/
+│   ├── math.test.js
+│   └── utils.test.js
+├── package.json
+└── jest.config.js
+ Пример теста (math.test.js)
+javascript
+const { sum, multiply } = require('../src/math');
+
+describe('Math operations', () => {
+  test('adds 1 + 2 to equal 3', () => {
+    expect(sum(1, 2)).toBe(3);
+  });
+
+  test('multiplies 3 * 4 to equal 12', () => {
+    expect(multiply(3, 4)).toBe(12);
+  });
+});
+ Дополнительные настройки (jest.config.js)
+javascript
+module.exports = {
+  verbose: true,
+  setupFilesAfterEnv: ['./jest.setup.js'],
+  moduleNameMapper: {
+    '^@/(.*)$': '<rootDir>/src/$1'
+  },
+  transform: {
+    '^.+\\.js$': 'babel-jest'
+  }
+};
+Запуск тестов
+bash
+npm test       # однократный запуск
+npm run test:watch  # режим наблюдения
+npm run test:coverage # с отчётом о покрытии
+--save-dev @babel/core @babel/preset-env babel-jest
