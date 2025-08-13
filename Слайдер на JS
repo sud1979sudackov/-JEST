@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Слайдер</title>
+    <style>
+        .slider-container {
+            position: relative;
+            max-width: 800px;
+            margin: 0 auto;
+            overflow: hidden;
+        }
+        
+        .slider-wrapper {
+            display: flex;
+            transition: transform 0.5s ease;
+        }
+        
+        .slide {
+            min-width: 100%;
+            box-sizing: border-box;
+        }
+        
+        .slide img {
+            width: 100%;
+            display: block;
+        }
+        
+        .slider-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            position: absolute;
+            top: 50%;
+            left: 0;
+            right: 0;
+            transform: translateY(-50%);
+        }
+        
+        .arrow {
+            cursor: pointer;
+            font-size: 24px;
+            padding: 10px;
+            background: rgba(0,0,0,0.5);
+            color: white;
+            z-index: 10;
+        }
+        
+        .dots {
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+        }
+        
+        .dot {
+            cursor: pointer;
+            height: 15px;
+            width: 15px;
+            margin: 0 5px;
+            background-color: #bbb;
+            border-radius: 50%;
+            display: inline-block;
+            transition: background-color 0.3s ease;
+        }
+        
+        .dot.active {
+            background-color: #717171;
+        }
+        
+        .nav-links {
+            display: flex;
+            justify-content: center;
+            padding: 10px 0;
+            background: #f1f1f1;
+        }
+        
+        .nav-link {
+            cursor: pointer;
+            padding: 5px 15px;
+            margin: 0 5px;
+        }
+        
+        .nav-link.active {
+            font-weight: bold;
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <div class="slider-container">
+        <!-- Навигационные ссылки -->
+        <div class="nav-links">
+            <div class="nav-link active" data-slide="0">Слайд 1</div>
+            <div class="nav-link" data-slide="1">Слайд 2</div>
+            <div class="nav-link" data-slide="2">Слайд 3</div>
+        </div>
+        
+        <!-- Слайды -->
+        <div class="slider-wrapper">
+            <div class="slide">
+                <img src="https://via.placeholder.com/800x400?text=Slide+1" alt="Slide 1">
+            </div>
+            <div class="slide">
+                <img src="https://via.placeholder.com/800x400?text=Slide+2" alt="Slide 2">
+            </div>
+            <div class="slide">
+                <img src="https://via.placeholder.com/800x400?text=Slide+3" alt="Slide 3">
+            </div>
+        </div>
+        
+        <!-- Стрелки -->
+        <div class="slider-controls">
+            <div class="arrow prev">&#10094;</div>
+            <div class="arrow next">&#10095;</div>
+        </div>
+        
+        <!-- Точки -->
+        <div class="dots">
+            <span class="dot active" data-slide="0"></span>
+            <span class="dot" data-slide="1"></span>
+            <span class="dot" data-slide="2"></span>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const sliderWrapper = document.querySelector('.slider-wrapper');
+            const slides = document.querySelectorAll('.slide');
+            const prevArrow = document.querySelector('.arrow.prev');
+            const nextArrow = document.querySelector('.arrow.next');
+            const dots = document.querySelectorAll('.dot');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let currentSlide = 0;
+            const slideCount = slides.length;
+            
+            // Инициализация слайдера
+            function updateSlider() {
+                sliderWrapper.style.transform = `translateX(-${currentSlide * 100}%)`;
+                
+                // Обновление активной точки
+                dots.forEach((dot, index) => {
+                    dot.classList.toggle('active', index === currentSlide);
+                });
+                
+                // Обновление активной ссылки
+                navLinks.forEach((link, index) => {
+                    link.classList.toggle('active', index === currentSlide);
+                });
+            }
+            
+            // Переключение на следующий слайд
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slideCount;
+                updateSlider();
+            }
+            
+            // Переключение на предыдущий слайд
+            function prevSlide() {
+                currentSlide = (currentSlide - 1 + slideCount) % slideCount;
+                updateSlider();
+            }
+            
+            // Обработчики для стрелок
+            nextArrow.addEventListener('click', nextSlide);
+            prevArrow.addEventListener('click', prevSlide);
+            
+            // Обработчики для точек
+            dots.forEach(dot => {
+                dot.addEventListener('click', function() {
+                    currentSlide = parseInt(this.getAttribute('data-slide'));
+                    updateSlider();
+                });
+            });
+            
+            // Обработчики для навигационных ссылок
+            navLinks.forEach(link => {
+                link.addEventListener('click', function() {
+                    currentSlide = parseInt(this.getAttribute('data-slide'));
+                    updateSlider();
+                });
+            });
+            
+            // Автоматическое переключение (опционально)
+            // setInterval(nextSlide, 3000);
+        });
+    </script>
+</body>
+</html>
+Особенности реализации:
+Кольцевая навигация:
+
+После последнего слайда (№3) идет первый (№1)
+
+Перед первым слайдом (при нажатии "назад") идет последний
+
+Управляющие элементы:
+
+Стрелки по бокам (переключают слайды по порядку)
+
+Кружочки-индикаторы (позволяют перейти к конкретному слайду)
+
+Навигационные ссылки сверху (также для перехода к конкретному слайду)
+
+Анимация:
+
+Плавное переключение слайдов с эффектом сдвига
+
+Визуальное выделение активного слайда (точка и ссылка)
+
+Адаптивность:
+
+Слайдер подстраивается под ширину контейнера
+
+Вы можете легко настроить этот слайдер:
+
+Заменить изображения-заглушки на свои
+
+Изменить количество слайдов (добавив/удалив элементы slide)
+
+Настроить стили под дизайн вашего сайта
+
+Добавить автоматическое переключение (раскомментировав строку с setInterval)
