@@ -1,97 +1,64 @@
-Вот полный пример файла package.json с настроенной библиотекой Jest для тестирования:
-
-json
-{
-  "name": "javascript-functions-testing",
-  "version": "1.0.0",
-  "description": "Тестирование JavaScript функций с Jest",
-  "main": "index.js",
-  "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watchAll",
-    "test:coverage": "jest --coverage",
-    "test:calculateAverage": "jest calculateAverage.test.js"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "devDependencies": {
-    "@babel/core": "^7.20.7",
-    "@babel/preset-env": "^7.20.2",
-    "babel-jest": "^29.3.1",
-    "jest": "^29.3.1"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "collectCoverage": true,
-    "coverageDirectory": "coverage",
-    "coverageReporters": ["text", "lcov"],
-    "transform": {
-      "^.+\\.js$": "babel-jest"
-    },
-    "verbose": true
-  },
-  "babel": {
-    "presets": ["@babel/preset-env"]
-  }
-}
-
-Базовая настройка
- в package.json:
-
-json
-{
-  "scripts": {
-    "test": "jest",
-    "test:watch": "jest --watchAll",
-    "test:coverage": "jest --coverage"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "collectCoverage": true,
-    "coverageDirectory": "coverage",
-    "coverageReporters": ["text", "lcov"]
-  }
-}
- Пример структуры проекта
-text
 project/
 ├── src/
-│   ├── math.js
-│   └── utils.js
+│   ├── math.js          # Основные математические функции
+│   └── utils.js         # Вспомогательные утилиты
 ├── __tests__/
-│   ├── math.test.js
-│   └── utils.test.js
-├── package.json
-└── jest.config.js
- Пример теста (math.test.js)
+│   ├── math.test.js     # Тесты для math.js
+│   └── utils.test.js    # Тесты для utils.js
+├── package.json         # Зависимости и скрипты
+└── jest.config.js       # Конфигурация Jest
+1. Содержимое файлов
+src/math.js
 javascript
-const { sum, multiply } = require('../src/math');
+function sum(a, b) {
+  return a + b;
+}
 
-describe('Math operations', () => {
-  test('adds 1 + 2 to equal 3', () => {
-    expect(sum(1, 2)).toBe(3);
-  });
+function subtract(a, b) {
+  return a - b;
+}
 
-  test('multiplies 3 * 4 to equal 12', () => {
-    expect(multiply(3, 4)).toBe(12);
-  });
+module.exports = { sum, subtract };
+src/utils.js
+javascript
+function capitalize(str) {
+  return str.charAt(0).toUpperCase() + str.slice(1);
+}
+
+module.exports = { capitalize };
+__tests__/math.test.js
+javascript
+const { sum, subtract } = require('../src/math');
+
+test('Сумма 1 + 2 равна 3', () => {
+  expect(sum(1, 2)).toBe(3);
 });
- Дополнительные настройки (jest.config.js)
+
+test('Разность 5 - 3 равна 2', () => {
+  expect(subtract(5, 3)).toBe(2);
+});
+__tests__/utils.test.js
+javascript
+const { capitalize } = require('../src/utils');
+
+test('Капитализация строки "hello"', () => {
+  expect(capitalize('hello')).toBe('Hello');
+});
+package.json
+json
+{
+  "name": "jest-testing-example",
+  "version": "1.0.0",
+  "scripts": {
+    "test": "jest"
+  },
+  "devDependencies": {
+    "jest": "^29.0.0"
+  }
+}
+jest.config.js
 javascript
 module.exports = {
-  verbose: true,
-  setupFilesAfterEnv: ['./jest.setup.js'],
-  moduleNameMapper: {
-    '^@/(.*)$': '<rootDir>/src/$1'
-  },
-  transform: {
-    '^.+\\.js$': 'babel-jest'
-  }
+  testEnvironment: 'node',
+  verbose: true,  // Показывает детализированный вывод тестов
 };
-Запуск тестов
-bash
-npm test       # однократный запуск
-npm run test:watch  # режим наблюдения
-npm run test:coverage # с отчётом о покрытии
---save-dev @babel/core @babel/preset-env babel-jest
