@@ -1,0 +1,7 @@
+discount-calculator/
+├── src/
+│   └── discount.js
+├── __tests__/
+│   └── discount.test.js
+├── package.json
+└── jest.config.js
