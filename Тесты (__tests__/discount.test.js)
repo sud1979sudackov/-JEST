@@ -1,0 +1,37 @@
+const { calculateDiscount } = require('../src/discount');
+
+describe('calculateDiscount', () => {
+  // Positive test cases
+  test('applies 20% discount correctly', () => {
+    expect(calculateDiscount(100, 20)).toBe(80);
+  });
+
+  test('handles 0% discount', () => {
+    expect(calculateDiscount(50, 0)).toBe(50);
+  });
+
+  test('applies 100% discount correctly', () => {
+    expect(calculateDiscount(75, 100)).toBe(0);
+  });
+
+  test('rounds to 2 decimal places', () => {
+    expect(calculateDiscount(99.99, 25)).toBe(74.99);
+  });
+
+  // Negative test cases
+  test('throws error for negative price', () => {
+    expect(() => calculateDiscount(-100, 10)).toThrow("Invalid input data");
+  });
+
+  test('throws error for negative discount', () => {
+    expect(() => calculateDiscount(100, -10)).toThrow("Invalid input data");
+  });
+
+  test('throws error for discount > 100%', () => {
+    expect(() => calculateDiscount(100, 110)).toThrow("Invalid input data");
+  });
+
+  test('throws error for zero price', () => {
+    expect(() => calculateDiscount(0, 10)).toThrow("Invalid input data");
+  });
+});
